@@ -107,18 +107,14 @@ def configure_logging(namespace, log_format='%(message)s', log_level='DEBUG'):
     logger._log = _log
 
 
-def build_command(description, version, command_group, package,
-                  log_format='%(message)s', log_level='DEBUG'):
+def build_command(description, version, command_group):
     """Build a command to instantiate and run"""
-
-    # logging
-    configure_logging(package, log_format, log_level)
 
     # subcommand plugins
     subcommands = get_plugins(command_group)
 
     # click command
-    description = "{description}".format(description=description, version=version)
+    description = "{description}".format(description=description)
     command = click.Group('pyoscore', help=description)
     for name, cls in subcommands.iteritems():
         subcommand = click.Command(
