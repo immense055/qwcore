@@ -20,6 +20,10 @@ MODULES_PATH = os.path.join(DOCS_PATH, 'modules')
 logger = logging.getLogger(PROJECT)
 
 
+__all__ = ['docs', 'install_editable', 'rst_all', 'rst_api', 'rst_cli',
+           'rst_docs_index', 'rst_readme', 'test']
+
+
 def run(*args, **kwargs):
     """a run that logs red when it fails"""
     r = irun(*args,  warn=True, **kwargs)
