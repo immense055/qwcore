@@ -126,20 +126,13 @@ def rst_all():
     rst_readme()
 
 
-@task(pre=[install_editable])
+@task(pre=[install_editable, rst_all])
 def docs():
     run('sphinx-build -W -b html -d docs/_build/doctree docs docs/_build/html')
 
 
 @task
-def test():
+def test(default=True):
     cmd = 'tox -e py27,flake8,py3flake8'
     logger.info(cmd)
     run(cmd)
-
-
-@task(default=True)
-def all():
-    rst_all()
-    docs()
-    test()
