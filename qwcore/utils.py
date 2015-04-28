@@ -87,24 +87,26 @@ def get_plugins(group, name=None):
     return plugins
 
 
+def _log(self, level, msg, args, exc_info=None, extra=None, color=True):
+    if extra is None:
+        extra = {}
+    extra['color'] = color
+    self._log_(level, msg, args, exc_info, extra)
+
+
+# support a color kwarg for logging methods
+logging.Logger._log_ = logging.Logger._log
+logging.Logger._log = _log
+
+
 def configure_logging(namespace, log_format='%(message)s', log_level='DEBUG'):
     """Setup logging"""
-    formatter = logging.Formatter(log_format)
     logger = logging.getLogger(namespace)
+    formatter = logging.Formatter(log_format)
     handler = ColoredStreamHandler(sys.stdout)
     handler.setFormatter(formatter)
     logger.setLevel(getattr(logging, log_level))
     logger.addHandler(handler)
-
-    # support a color kwarg for logging methods
-    logger._log_ = logger._log
-
-    def _log(level, msg, args, exc_info=None, extra=None, color=True):
-        if extra is None:
-            extra = {}
-        extra['color'] = color
-        logger._log_(level, msg, args, exc_info, extra)
-    logger._log = _log
 
 
 def build_command(description, version, command_group):
