@@ -131,8 +131,8 @@ def docs():
     run('sphinx-build -W -b html -d docs/_build/doctree docs docs/_build/html')
 
 
-@task
-def test(default=True):
+@task(default=True)
+def test():
     cmd = 'tox -e py27,flake8,py3flake8'
     logger.info(cmd)
     run(cmd)
