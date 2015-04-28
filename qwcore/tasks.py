@@ -8,7 +8,7 @@ from invoke import run as irun
 from invoke import task as itask
 from invoke import Task
 
-from qwcore.utils import get_plugins, configure_logging
+from qwcore.utils import get_plugins
 
 PROJECT_ROOT = os.getcwd()
 PROJECT = os.path.basename(PROJECT_ROOT)
@@ -17,7 +17,6 @@ PACKAGE_PATH = os.path.join(PROJECT_ROOT, PROJECT)
 DOCS_PATH = os.path.join(PROJECT_ROOT, 'docs')
 MODULES_PATH = os.path.join(DOCS_PATH, 'modules')
 
-configure_logging(PROJECT)
 logger = logging.getLogger(PROJECT)
 
 
@@ -118,6 +117,7 @@ def rst_readme():
 @task
 def rst_all():
     rst_api()
+    rst_cli()
     rst_docs_index()
     rst_readme()
 
