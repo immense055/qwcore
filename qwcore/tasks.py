@@ -60,6 +60,13 @@ def task(*args, **kwargs):
         return itask(wrapper)
 
 
+def has_docs():
+    if not os.path.exists(DOCS_PATH):
+        logger.warning("No docs found")
+        return False
+    return True
+
+
 @task
 def install_editable():
     cmd = 'pip install -e .'
@@ -69,6 +76,8 @@ def install_editable():
 
 @task
 def rst_api():
+    if not has_docs():
+        return
     if os.path.isdir(MODULES_PATH):
         shutil.rmtree(MODULES_PATH)
     api_cmd = 'sphinx-apidoc {pkg_path} {pkg_path}/tests {pkg_path}/tasks.py -o docs/modules -e -T -f'
@@ -77,6 +86,10 @@ def rst_api():
 
 @task(pre=[install_editable])
 def rst_cli():
+    if not has_docs():
+        return
+    if not hasattr(PACKAGE, 'cli'):
+        return
     rst = []
     rst.extend(['.. _%s_reference:' % PROJECT, ''])
     rst.extend(['%s cli' % PROJECT, '='*50, ''])
@@ -98,6 +111,8 @@ def rst_cli():
 
 @task
 def rst_docs_index():
+    if not has_docs():
+        return
     rst = []
     rst.extend(['='*50, PROJECT, '='*50, ''])
     rst.extend(['.. note::', '', '   a work in progress...', ''])
@@ -128,6 +143,8 @@ def rst_all():
 
 @task(pre=[install_editable, rst_all])
 def docs():
+    if not has_docs():
+        return
     run('sphinx-build -W -b html -d docs/_build/doctree docs docs/_build/html')
 
 
