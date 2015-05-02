@@ -128,7 +128,8 @@ def rst_readme():
     rst.extend(['.. image:: https://secure.travis-ci.org/pyospkg/%s.png?branch=master' % PROJECT,
                 '   :target: http://travis-ci.org/pyospkg/%s' % PROJECT, ''])
     rst.extend([PACKAGE.__about__.DESCRIPTION_RST, ''])
-    rst.extend(['Docs:  http://%s.readthedocs.org/en/latest/' % PROJECT])
+    if has_docs():
+        rst.extend(['Docs:  http://%s.readthedocs.org/en/latest/' % PROJECT])
     with open(os.path.join(PROJECT_ROOT, 'readme.rst'), 'w') as fh:
         fh.write("\n".join(rst))
 
