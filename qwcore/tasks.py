@@ -125,8 +125,12 @@ def rst_docs_index():
 @task
 def rst_readme():
     rst = []
-    rst.extend(['.. image:: https://secure.travis-ci.org/pyospkg/%s.png?branch=master' % PROJECT,
-                '   :target: http://travis-ci.org/pyospkg/%s' % PROJECT, ''])
+    org = PACKAGE.__about__.ORG
+    name = PACKAGE.__about__.NAME
+    rst.extend([('.. image:: https://secure.travis-ci.org/'
+                 '{org}/{name}.png?branch=master'.format(org=org, name=name)),
+                '   :target: http://travis-ci.org/{org}/{name}'.format(org=org, name=name),
+                ''])
     rst.extend([PACKAGE.__about__.DESCRIPTION_RST, ''])
     if has_docs():
         rst.extend(['Docs:  http://%s.readthedocs.org/en/latest/' % PROJECT])
