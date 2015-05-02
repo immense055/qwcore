@@ -10,6 +10,8 @@ from qwcore.exceptions import (PluginNameNotFound, NoPluginsFound,
                                DuplicatePlugin, PluginNameMismatch,
                                PluginNoNameAttribute)
 
+COLOR_LOG = dict(color=True)
+
 try:
     import colorama
 except Exception:
@@ -38,7 +40,7 @@ class ColoredStreamHandler(logging.StreamHandler):
 
     def format(self, record):
         msg = logging.StreamHandler.format(self, record)
-        if record.color and self.should_color():
+        if hasattr(record, 'color') and record.color and self.should_color():
             for level, color in self.colors:
                 if record.levelno >= level:
                     msg = "".join([color] + [msg, colorama.Fore.RESET])
@@ -85,18 +87,6 @@ def get_plugins(group, name=None):
     elif not plugins:
         raise NoPluginsFound("no %s plugins found" % group)
     return plugins
-
-
-def _log(self, level, msg, args, exc_info=None, extra=None, color=True):
-    if extra is None:
-        extra = {}
-    extra['color'] = color
-    self._log_(level, msg, args, exc_info, extra)
-
-
-# support a color kwarg for logging methods
-logging.Logger._log_ = logging.Logger._log
-logging.Logger._log = _log
 
 
 def configure_logging(namespace, log_format='%(message)s', log_level='DEBUG'):
