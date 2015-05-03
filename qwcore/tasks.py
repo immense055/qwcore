@@ -8,7 +8,7 @@ from invoke import run as irun
 from invoke import task as itask
 from invoke import Task
 
-from qwcore.utils import get_plugins, COLOR_LOG
+from qwcore.utils import COLOR_LOG
 
 PROJECT_ROOT = os.getcwd()
 PROJECT = os.path.basename(PROJECT_ROOT)
@@ -86,6 +86,7 @@ def rst_api():
 
 @task(pre=[install_editable])
 def rst_cli():
+    """Build rst for cli docs based on console script entry points"""
     if not has_docs():
         return
     if not hasattr(PACKAGE, 'cli'):
@@ -94,17 +95,25 @@ def rst_cli():
     rst.extend(['.. _%s_reference:' % PROJECT, ''])
     rst.extend(['%s cli' % PROJECT, '='*50, ''])
     rst.extend(['.. contents:: Contents', '   :local:', ''])
-    rst.extend([PROJECT, '-'*50, ''])
-    r = run('%s --help' % PROJECT)
-    out = ['  ' + l for l in r.stdout.splitlines()]
-    rst.extend(['::', ''] + out + [''])
-    cmds = get_plugins(PACKAGE.cli.COMMAND_GROUP)
-    for name, cmd in sorted(cmds.items()):
-        full_cmd = "%s %s" % (PROJECT, name)
-        rst.extend([full_cmd, '-'*50, ''])
-        r = run('%s --help' % full_cmd)
+
+    for ep in PACKAGE.__about__.ENTRY_POINTS['console_scripts']:
+        script, _ = ep.split('=')
+        script_ep_name = '%s.commands' % script.replace('-', '.')
+        cmd_eps = PACKAGE.__about__.ENTRY_POINTS[script_ep_name]
+        if not cmd_eps:
+            continue
+        rst.extend([script, '-'*50, ''])
+        r = run('%s --help' % script)
         out = ['  ' + l for l in r.stdout.splitlines()]
         rst.extend(['::', ''] + out + [''])
+        for ep in cmd_eps:
+            cmd, _ = ep.split('=')
+            full_cmd = "%s %s" % (script, cmd)
+            rst.extend([full_cmd, '-'*50, ''])
+            r = run('%s --help' % full_cmd)
+            out = ['  ' + l for l in r.stdout.splitlines()]
+            rst.extend(['::', ''] + out + [''])
+
     with open(os.path.join(DOCS_PATH, 'cli.rst'), 'w') as fh:
         fh.write("\n".join(rst))
 
