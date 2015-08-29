@@ -107,19 +107,19 @@ def build_command(name, description, version, command_group):
 
     subcommands = get_plugins(command_group)
 
-    def version(ctx, param, value):
+    def show_version(ctx, param, value):
         if value:
             click.echo(version)
             ctx.exit()
 
-    def debug(ctx, param, value):
+    def set_debug(ctx, param, value):
         if value:
             log = logging.getLogger(name)
             log.setLevel(getattr(logging, 'DEBUG'))
 
     version_flag = click.Option(['--version'], is_flag=True, expose_value=False,
-                                callback=version, is_eager=True, help='Show the version and exit.')
-    debug_flag = click.Option(['--debug'], is_flag=True, callback=debug,
+                                callback=show_version, is_eager=True, help='Show the version and exit.')
+    debug_flag = click.Option(['--debug'], is_flag=True, callback=set_debug,
                               expose_value=False, help='Turn on debug logging.')
 
     description = "{description}".format(description=description)
