@@ -89,26 +89,42 @@ def get_plugins(group, name=None):
     return plugins
 
 
-def configure_logging(namespace, log_format='%(message)s', log_level='DEBUG'):
+def configure_logging(namespace, log_format='%(message)s', log_level='INFO', color=False):
     """Setup logging"""
     logger = logging.getLogger(namespace)
     formatter = logging.Formatter(log_format)
-    handler = ColoredStreamHandler(sys.stdout)
+    if color:
+        handler = ColoredStreamHandler(sys.stdout)
+    else:
+        handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(formatter)
     logger.setLevel(getattr(logging, log_level))
     logger.addHandler(handler)
 
 
-def build_command(description, version, command_group):
+def build_command(name, description, version, command_group):
     """Build a command to instantiate and run"""
 
-    # subcommand plugins
     subcommands = get_plugins(command_group)
 
-    # click command
+    def version(ctx, param, value):
+        if value:
+            click.echo(version)
+            ctx.exit()
+
+    def debug(ctx, param, value):
+        if value:
+            log = logging.getLogger(name)
+            log.setLevel(getattr(logging, 'DEBUG'))
+
+    version_flag = click.Option(['--version'], is_flag=True, expose_value=False,
+                                callback=version, is_eager=True, help='Show the version and exit.')
+    debug_flag = click.Option(['--debug'], is_flag=True, callback=debug,
+                              expose_value=False, help='Turn on debug logging.')
+
     description = "{description}".format(description=description)
-    command = click.Group('pyoscore', help=description)
-    for name, cls in subcommands.iteritems():
+    command = click.Group(command_group, help=description, params=[version_flag, debug_flag])
+    for plugin_name, cls in subcommands.iteritems():
         subcommand = click.Command(
             cls.name,
             short_help=cls.help,
