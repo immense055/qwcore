@@ -1,8 +1,6 @@
 import logging
-import os
 import sys
 import pkg_resources
-import subprocess
 import textwrap
 
 import click
@@ -10,26 +8,6 @@ import click
 from qwcore.exceptions import (PluginNameNotFound, NoPluginsFound,
                                DuplicatePlugin, PluginNameMismatch,
                                PluginNoNameAttribute)
-
-
-def run(cmd, logger, cwd=None, env=None):
-    """Run a subprocess"""
-
-    environ = os.environ.copy()
-    if env:
-        environ.update(env)
-
-    proc = subprocess.Popen(cmd,
-                            stderr=subprocess.STDOUT,
-                            stdout=subprocess.PIPE,
-                            cwd=cwd,
-                            env=env)
-
-    # real time logging unless the subprocess itself is buffering
-    # http://stackoverflow.com/a/17698359
-    for line in iter(proc.stdout.readline, b''):
-        logger.info(line.rstrip())
-    proc.communicate()
 
 
 def get_plugins(group, name=None):
