@@ -21,7 +21,6 @@ CLASSIFIERS = [
 ],
 INSTALL_REQUIRES = [
     'setuptools',
-    'colorama',
     'invoke',
     'click',
 ]

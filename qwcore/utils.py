@@ -1,4 +1,3 @@
-import click
 import logging
 import os
 import sys
@@ -6,46 +5,11 @@ import pkg_resources
 import subprocess
 import textwrap
 
+import click
+
 from qwcore.exceptions import (PluginNameNotFound, NoPluginsFound,
                                DuplicatePlugin, PluginNameMismatch,
                                PluginNoNameAttribute)
-
-COLOR_LOG = dict(color=True)
-
-try:
-    import colorama
-except Exception:
-    colorama = None
-
-
-class ColoredStreamHandler(logging.StreamHandler):
-
-    def __init__(self, stream=None):
-        logging.StreamHandler.__init__(self, stream)
-
-        self.colors = [
-            (logging.ERROR, colorama.Fore.RED),
-            (logging.WARNING, colorama.Fore.YELLOW),
-            (logging.INFO, colorama.Fore.GREEN)
-        ]
-
-    def should_color(self):
-        if not colorama:
-            return False
-        if hasattr(self.stream, "isatty") and self.stream.isatty():
-            return True
-        if os.environ.get("TERM") == "ANSI":
-            return True
-        return False
-
-    def format(self, record):
-        msg = logging.StreamHandler.format(self, record)
-        if hasattr(record, 'color') and record.color and self.should_color():
-            for level, color in self.colors:
-                if record.levelno >= level:
-                    msg = "".join([color] + [msg, colorama.Fore.RESET])
-                    break
-        return msg
 
 
 def run(cmd, logger, cwd=None, env=None):
@@ -93,10 +57,7 @@ def configure_logging(namespace, log_format='%(message)s', log_level='INFO', col
     """Setup logging"""
     logger = logging.getLogger(namespace)
     formatter = logging.Formatter(log_format)
-    if color:
-        handler = ColoredStreamHandler(sys.stdout)
-    else:
-        handler = logging.StreamHandler(sys.stdout)
+    handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(formatter)
     logger.setLevel(getattr(logging, log_level))
     logger.addHandler(handler)

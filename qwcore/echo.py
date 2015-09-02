@@ -10,5 +10,9 @@ def success(msg):
     echo(style(msg, fg='green'))
 
 
+def warning(msg):
+    echo(style(msg, fg='yellow'))
+
+
 def error(msg):
     echo(style(msg, fg='red'))

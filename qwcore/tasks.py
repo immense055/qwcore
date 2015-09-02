@@ -8,7 +8,7 @@ from invoke import run as irun
 from invoke import task as itask
 from invoke import Task
 
-from qwcore.utils import COLOR_LOG
+from qwcore import echo
 
 PROJECT_ROOT = os.getcwd()
 PROJECT = os.path.basename(PROJECT_ROOT)
@@ -28,7 +28,7 @@ def run(*args, **kwargs):
     """a run that logs red when it fails"""
     r = irun(*args,  warn=True, **kwargs)
     if not r.ok:
-        logger.error("Command Failed", extra=COLOR_LOG)
+        echo.error("Command Failed")
         raise SystemExit(1)
     return r
 
@@ -44,9 +44,9 @@ def task(*args, **kwargs):
 
     def wrapper_maker(mytask):
         def wrapper():
-            logger.info("Begin: %s" % mytask.__name__, extra=COLOR_LOG)
+            echo.success("Begin: %s" % mytask.__name__)
             mytask()
-            logger.info("Completed: %s" % mytask.__name__, extra=COLOR_LOG)
+            echo.success("Completed: %s" % mytask.__name__)
         wrapper.__name__ = mytask.__name__
         return wrapper
     if withargs:
@@ -62,7 +62,7 @@ def task(*args, **kwargs):
 
 def has_docs():
     if not os.path.exists(DOCS_PATH):
-        logger.warning("No docs found", extra=COLOR_LOG)
+        echo.warning("No docs found")
         return False
     return True
 
