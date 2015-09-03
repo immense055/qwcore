@@ -42,7 +42,7 @@ def configure_logging(namespace, log_format='%(message)s', log_level='INFO', col
 
 
 def build_command(name, description, version, command_group):
-    """Build a command to instantiate and run"""
+    """Build a click command"""
 
     subcommands = get_plugins(command_group)
 
