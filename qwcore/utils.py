@@ -31,7 +31,7 @@ def get_plugins(group, name=None):
     return plugins
 
 
-def configure_logging(namespace, log_format='%(message)s', log_level='INFO', color=False):
+def configure_logging(namespace, log_format='%(message)s', log_level='INFO'):
     """Setup logging"""
     logger = logging.getLogger(namespace)
     formatter = logging.Formatter(log_format)
