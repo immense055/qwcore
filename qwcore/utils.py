@@ -4,6 +4,7 @@ import pkg_resources
 import textwrap
 
 import click
+import six
 
 from qwcore.exceptions import (PluginNameNotFound, NoPluginsFound,
                                DuplicatePlugin, PluginNameMismatch,
@@ -63,7 +64,7 @@ def build_command(name, description, version, command_group):
 
     description = "{description}".format(description=description)
     command = click.Group(command_group, help=description, params=[version_flag, debug_flag])
-    for plugin_name, cls in subcommands.iteritems():
+    for plugin_name, cls in six.iteritems(subcommands):
         subcommand = click.Command(
             cls.name,
             short_help=cls.help,

@@ -20,8 +20,9 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.4'
 ],
 INSTALL_REQUIRES = [
-    'setuptools',
-    'invoke',
     'click',
+    'invoke',
+    'setuptools',
+    'six'
 ]
 ENTRY_POINTS = {}
