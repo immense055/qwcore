@@ -3,9 +3,9 @@ import pkg_resources
 import pytest
 
 from qwcore.plugin import get_plugins
-from qwcore.exceptions import (PluginNameNotFound, NoPluginsFound,
-                               DuplicatePlugin, PluginNameMismatch,
-                               PluginNoNameAttribute)
+from qwcore.exceptions import (PluginNameNotFoundError, NoPluginsFoundError,
+                               DuplicatePluginError, PluginNameMismatchError,
+                               PluginNoNameAttributeError)
 
 
 class PluginClass(object):
@@ -45,25 +45,25 @@ class TestLoadPlugins(object):
 
     def test_load_mismatch(self, monkeypatch):
         self.patch_iter_ep(monkeypatch, 'PluginClassMismatch')
-        with pytest.raises(PluginNameMismatch):
+        with pytest.raises(PluginNameMismatchError):
             get_plugins('foo', name='testname')
 
     def test_load_no_name_attr(self, monkeypatch):
         self.patch_iter_ep(monkeypatch, 'PluginClassNoName')
-        with pytest.raises(PluginNoNameAttribute):
+        with pytest.raises(PluginNoNameAttributeError):
             get_plugins('foo', name='testname')
 
     def test_load_name_not_found(self, monkeypatch):
         self.patch_iter_ep(monkeypatch, 'PluginClass', no_ep=True)
-        with pytest.raises(PluginNameNotFound):
+        with pytest.raises(PluginNameNotFoundError):
             get_plugins('foo', name='testname')
 
     def test_load_duplicates(self, monkeypatch):
         self.patch_iter_ep(monkeypatch, 'PluginClass', dupe=True)
-        with pytest.raises(DuplicatePlugin):
+        with pytest.raises(DuplicatePluginError):
             get_plugins('foo', name='testname')
 
     def test_load_no_plugins(self, monkeypatch):
         self.patch_iter_ep(monkeypatch, 'PluginClass', no_ep=True)
-        with pytest.raises(NoPluginsFound):
+        with pytest.raises(NoPluginsFoundError):
             get_plugins('foo')

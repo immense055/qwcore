@@ -1,8 +1,8 @@
 import pkg_resources
 
-from qwcore.exceptions import (PluginNameNotFound, NoPluginsFound,
-                               DuplicatePlugin, PluginNameMismatch,
-                               PluginNoNameAttribute)
+from qwcore.exceptions import (PluginNameNotFoundError, NoPluginsFoundError,
+                               DuplicatePluginError, PluginNameMismatchError,
+                               PluginNoNameAttributeError)
 
 
 def get_plugins(group, name=None):
@@ -11,16 +11,16 @@ def get_plugins(group, name=None):
     for entry_point in pkg_resources.iter_entry_points(group, name=name):
         plugin = entry_point.load()
         if hasattr(plugin, 'name') and entry_point.name != plugin.name:
-            raise PluginNameMismatch(
+            raise PluginNameMismatchError(
                 "name %s does not match plugin name %s" % (entry_point.name, plugin.name))
         elif not hasattr(plugin, 'name'):
-            raise PluginNoNameAttribute(
+            raise PluginNoNameAttributeError(
                 "plugin %s has no 'name' attribute" % (entry_point.name))
         if plugin.name in plugins:
-            raise DuplicatePlugin("duplicate plugin %s found" % name)
+            raise DuplicatePluginError("duplicate plugin %s found" % name)
         plugins[plugin.name] = plugin
     if name and not plugins:
-        raise PluginNameNotFound("no %s template found with name %s" % (group, name))
+        raise PluginNameNotFoundError("no %s template found with name %s" % (group, name))
     elif not plugins:
-        raise NoPluginsFound("no %s plugins found" % group)
+        raise NoPluginsFoundError("no %s plugins found" % group)
     return plugins
