@@ -5,8 +5,13 @@ from qwcore.exceptions import (PluginNameNotFoundError, NoPluginsFoundError,
                                PluginNoNameAttributeError)
 
 
-def get_plugins(group, name=None):
-    """Given a plugin group and name, return a dict of plugin classes by name"""
+def _get_plugins(group, name=None):
+    """Return a dict of plugins by name from a certain group, filtered by name if
+    given.
+
+    :param group: plugin group
+    :param name: plugin name
+    """
     plugins = {}
     for entry_point in pkg_resources.iter_entry_points(group, name=name):
         plugin = entry_point.load()
@@ -24,3 +29,20 @@ def get_plugins(group, name=None):
     elif not plugins:
         raise NoPluginsFoundError("no %s plugins found" % group)
     return plugins
+
+
+def get_plugin(group, name):
+    """Return a single plugin
+
+    :param group: plugin group
+    :param name: plugin name
+    """
+    return _get_plugins(group, name)[name]
+
+
+def get_plugins(group):
+    """Return a dict of plugins by name from a certain group
+
+    :param group: plugin group
+    """
+    return _get_plugins(group)
