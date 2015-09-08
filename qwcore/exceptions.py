@@ -1,3 +1,4 @@
+
 class PluginNameNotFound(Exception):
     """Raised when a specific plugin is not found"""
 
