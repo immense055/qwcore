@@ -1,3 +1,4 @@
+"""Colored Echos"""
 
 from click import echo, style
 
