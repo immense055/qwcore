@@ -20,7 +20,9 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.4'
 ],
 INSTALL_REQUIRES = [
+    'appdirs',
     'click',
+    'configobj',
     'invoke',
     'setuptools',
     'six'
