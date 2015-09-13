@@ -25,7 +25,7 @@ def _get_plugins(group, name=None):
             raise DuplicatePluginError("duplicate plugin %s found" % name)
         plugins[plugin.name] = plugin
     if name and not plugins:
-        raise PluginNameNotFoundError("no %s template found with name %s" % (group, name))
+        raise PluginNameNotFoundError("no %s plugin found with name %s" % (group, name))
     elif not plugins:
         raise NoPluginsFoundError("no %s plugins found" % group)
     return plugins
