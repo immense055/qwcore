@@ -8,7 +8,13 @@ from qwcore.plugin import get_plugins
 
 
 def build_command(name, description, version, command_group):
-    """Build a click command"""
+    """Build a click command with subcommands
+
+    :param name: command name
+    :description: command description
+    :version: command version
+    :command_group: the entry point group for the subcommand extensions
+    """
 
     subcommands = get_plugins(command_group)
 
