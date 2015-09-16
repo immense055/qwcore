@@ -1,35 +1,31 @@
 
-class QwcoreException(Exception):
+class QwcoreError(Exception):
     """Qwcore base exception"""
 
 
-class PluginNameNotFoundError(QwcoreException):
+class PluginNameNotFoundError(QwcoreError):
     """Raised when a specific plugin is not found"""
 
 
-class PluginNameMismatchError(QwcoreException):
+class PluginNameMismatchError(QwcoreError):
     """Raised when a plugin name does not match the 'name' attribute of the object"""
 
 
-class DuplicatePluginError(QwcoreException):
+class DuplicatePluginError(QwcoreError):
     """Raised when a specific name has multiple plugins"""
 
 
-class NoPluginsFoundError(QwcoreException):
+class NoPluginsFoundError(QwcoreError):
     """Raised when no template plugins are found"""
 
 
-class PluginNoNameAttributeError(QwcoreException):
+class PluginNoNameAttributeError(QwcoreError):
     """Raised when a plugin has no 'name' attribute"""
 
 
-class ConfigFileNotFoundError(QwcoreException):
+class ConfigFileNotFoundError(QwcoreError):
     """Raised when the config file for an app is not found"""
 
 
-class ConfigFileParserError(QwcoreException):
+class ConfigFileParserError(QwcoreError):
     """Raised when the config file can't be parsed"""
-
-
-class ConfigFileKeyError(QwcoreException):
-    """Raised when a key can't be found"""
