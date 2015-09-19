@@ -9,3 +9,4 @@ MANIFEST
 *~
 .ropeproject
 .coverage
+.cache
