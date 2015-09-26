@@ -8,11 +8,9 @@ from qwcore.exceptions import (PluginNameNotFoundError, NoPluginsFoundError,
 def _iter_entry_points(group, name=None, project=None):
     """Yield entry point objects from `group` matching `name`, and `project`"""
     for dist in pkg_resources.working_set:
-        print dist.project_name
         if project and dist.project_name != project:
             continue
         entries = dist.get_entry_map(group)
-        print entries
         if name is None:
             for ep in entries.values():
                 yield ep
