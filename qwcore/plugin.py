@@ -5,34 +5,51 @@ from qwcore.exceptions import (PluginNameNotFoundError, NoPluginsFoundError,
                                PluginNoNameAttributeError)
 
 
-def _get_plugins(group, name=None):
-    """Return a dict of plugins by name from a certain group, filtered by name if
-    given.
+def _iter_entry_points(group, name=None, project=None):
+    """Yield entry point objects from `group` matching `name`, and `project`"""
+    for dist in pkg_resources.working_set:
+        print dist.project_name
+        if project and dist.project_name != project:
+            continue
+        entries = dist.get_entry_map(group)
+        print entries
+        if name is None:
+            for ep in entries.values():
+                yield ep
+        elif name in entries:
+            yield entries[name]
+
+
+def _get_plugins(group, name=None, project=None):
+    """Return a dict of plugins by name from a certain `group`, filtered by `name`
+    and/or `project` if given.
 
     :param group: plugin group
     :param name: plugin name
+    :param project: project name
+
     """
     plugins = {}
-    for entry_point in pkg_resources.iter_entry_points(group, name=name):
+    for entry_point in _iter_entry_points(group, name=name, project=project):
         plugin = entry_point.load()
         if hasattr(plugin, 'name') and entry_point.name != plugin.name:
             raise PluginNameMismatchError(
-                "name %s does not match plugin name %s" % (entry_point.name, plugin.name))
+                "name '%s' does not match plugin name '%s'" % (entry_point.name, plugin.name))
         elif not hasattr(plugin, 'name'):
             raise PluginNoNameAttributeError(
                 "plugin %s has no 'name' attribute" % (entry_point.name))
         if plugin.name in plugins:
-            raise DuplicatePluginError("duplicate plugin %s found" % name)
+            raise DuplicatePluginError("duplicate plugin '%s' found" % plugin.name)
         plugins[plugin.name] = plugin
     if name and not plugins:
-        raise PluginNameNotFoundError("no %s plugin found with name %s" % (group, name))
+        raise PluginNameNotFoundError("no %s plugin found with name '%s'" % (group, name))
     elif not plugins:
-        raise NoPluginsFoundError("no %s plugins found" % group)
+        raise NoPluginsFoundError("no '%s' plugins found" % group)
     return plugins
 
 
 def get_plugin(group, name):
-    """Return a single plugin
+    """Return a single plugin by `group` and `name`
 
     :param group: plugin group
     :param name: plugin name
@@ -40,9 +57,10 @@ def get_plugin(group, name):
     return _get_plugins(group, name)[name]
 
 
-def get_plugins(group):
-    """Return a dict of plugins by name from a certain group
+def get_plugins(group, project=None):
+    """Return a dict of plugins by `group`, and optionally filtered by `project`
 
     :param group: plugin group
+    :param project: project name
     """
-    return _get_plugins(group)
+    return _get_plugins(group, project=project)
