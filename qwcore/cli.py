@@ -7,7 +7,7 @@ import six
 from qwcore.plugin import get_plugins
 
 
-def build_command(name, description, version, command_group):
+def build_command(name, description, version, command_group, project_name=None):
     """Build a click command with subcommands
 
     :param name: command name
@@ -16,7 +16,17 @@ def build_command(name, description, version, command_group):
     :command_group: the entry point group for the subcommand extensions
     """
 
+    if not project_name:
+        project_name = name
+
     subcommands = get_plugins(command_group)
+
+    class MyGroup(click.Group):
+
+        # override to set the project name for the command
+        def get_command(self, ctx, cmd_name):
+            ctx.meta['qwcore.project_name'] = project_name
+            return super(MyGroup, self).get_command(ctx, cmd_name)
 
     def show_version(ctx, param, value):
         if value:
@@ -34,7 +44,7 @@ def build_command(name, description, version, command_group):
                               expose_value=False, help='Turn on debug logging.')
 
     description = "{description}".format(description=description)
-    command = click.Group(command_group, help=description, params=[version_flag, debug_flag])
+    command = MyGroup(command_group, help=description, params=[version_flag, debug_flag])
     for plugin_name, cls in six.iteritems(subcommands):
         subcommand = click.Command(
             cls.name,

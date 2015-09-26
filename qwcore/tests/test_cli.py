@@ -46,3 +46,28 @@ def test_build_command(monkeypatch):
         pass
     assert Cmd1.run.mock_calls == [call(yo=False)]
     assert Cmd2.run.mock_calls == []
+
+
+def test_build_command_set_project(monkeypatch):
+
+    class Cmd1:
+        """Cmd1 doc"""
+        name = 'Cmd1'
+        help = 'help'
+        params = []
+
+        def run(self):
+            Cmd1.project_name = click.get_current_context().meta['qwcore.project_name']
+
+    subcommands = {'Cmd1': Cmd1}
+
+    def get_plugins(group, name=None):
+        return subcommands
+
+    monkeypatch.setattr('qwcore.cli.get_plugins', get_plugins)
+    cmd = build_command('testname', 'description', '1.0', 'group', 'project_test')
+    try:
+        cmd.main(['Cmd1'])
+    except SystemExit:
+        pass
+    assert Cmd1.project_name == 'project_test'
