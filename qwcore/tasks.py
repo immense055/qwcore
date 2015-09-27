@@ -90,6 +90,7 @@ def rst_cli():
     if not has_docs():
         return
     if not hasattr(PACKAGE, 'cli'):
+        echo.warning("No cli package found")
         return
     rst = []
     rst.extend(['.. _%s_reference:' % PROJECT, ''])
