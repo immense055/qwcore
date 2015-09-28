@@ -3,9 +3,9 @@ import pkg_resources
 import pytest
 
 from qwcore.plugin import _get_plugins, get_plugins, get_plugin
-from qwcore.exceptions import (PluginNameNotFoundError, NoPluginsFoundError,
-                               DuplicatePluginError, PluginNameMismatchError,
-                               PluginNoNameAttributeError)
+from qwcore.exception import (PluginNameNotFoundError, NoPluginsFoundError,
+                              DuplicatePluginError, PluginNameMismatchError,
+                              PluginNoNameAttributeError)
 
 
 class PluginClass(object):

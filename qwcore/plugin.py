@@ -1,6 +1,6 @@
 import pkg_resources
 
-from qwcore.exceptions import (PluginNameNotFoundError, NoPluginsFoundError,
+from qwcore.exception import (PluginNameNotFoundError, NoPluginsFoundError,
                                DuplicatePluginError, PluginNameMismatchError,
                                PluginNoNameAttributeError)
 

@@ -3,7 +3,7 @@ import os
 from appdirs import AppDirs
 import configobj
 
-from qwcore.exceptions import ConfigFileNotFoundError, ConfigFileParserError
+from qwcore.exception import ConfigFileNotFoundError, ConfigFileParserError
 
 
 def get_config(appname):
