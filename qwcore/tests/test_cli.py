@@ -48,7 +48,7 @@ def test_build_command(monkeypatch):
     assert Cmd2.run.mock_calls == []
 
 
-def test_build_command_set_project(monkeypatch):
+def test_build_command_set_project_app(monkeypatch):
 
     class Cmd1:
         """Cmd1 doc"""
@@ -58,6 +58,7 @@ def test_build_command_set_project(monkeypatch):
 
         def run(self):
             Cmd1.project_name = click.get_current_context().meta['qwcore.project_name']
+            Cmd1.app_name = click.get_current_context().meta['qwcore.app_name']
 
     subcommands = {'Cmd1': Cmd1}
 
@@ -65,9 +66,11 @@ def test_build_command_set_project(monkeypatch):
         return subcommands
 
     monkeypatch.setattr('qwcore.cli.get_plugins', get_plugins)
-    cmd = build_command('testname', 'description', '1.0', 'group', 'project_test')
+    cmd = build_command('testname', 'description', '1.0', 'group',
+                        project_name='project_test', app_name='app_test')
     try:
         cmd.main(['Cmd1'])
     except SystemExit:
         pass
     assert Cmd1.project_name == 'project_test'
+    assert Cmd1.app_name == 'app_test'
