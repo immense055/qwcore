@@ -1,8 +1,8 @@
 import pkg_resources
 
 from qwcore.exception import (PluginNameNotFoundError, NoPluginsFoundError,
-                               DuplicatePluginError, PluginNameMismatchError,
-                               PluginNoNameAttributeError)
+                              DuplicatePluginError, PluginNameMismatchError,
+                              PluginNoNameAttributeError)
 
 
 def _iter_entry_points(group, name=None, project=None):
