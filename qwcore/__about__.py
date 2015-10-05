@@ -1,5 +1,5 @@
 NAME = 'qwcore'
-ORG = 'qwcloud'
+ORG = 'pyospkg'
 VERSION = '0.1.0'
 DESCRIPTION = 'Core utils for qwcode projects'
 DESCRIPTION_RST = 'Core utils for `qwcode <https://github.com/qwcode>`_ projects.'
