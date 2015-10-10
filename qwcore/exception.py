@@ -29,3 +29,11 @@ class ConfigFileNotFoundError(QwcoreError):
 
 class ConfigFileParserError(QwcoreError):
     """Raised when the config file can't be parsed"""
+
+
+class ConfigFileSectionNotFoundError(QwcoreError):
+    """Raised when a section is not precent in the config file"""
+
+
+class ConfigFileKeyNotFoundError(QwcoreError):
+    """Raised when a section is not precent in the config file"""
