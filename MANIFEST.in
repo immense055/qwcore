@@ -1,1 +1,3 @@
-include *.rst
+include readme.rst
+include tasks.py
+include tox.ini
