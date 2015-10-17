@@ -16,8 +16,8 @@ PACKAGE = __import__(PROJECT, fromlist=['cli', '__about__'])
 PACKAGE_PATH = os.path.join(PROJECT_ROOT, PROJECT)
 DOCS_PATH = os.path.join(PROJECT_ROOT, 'docs')
 MODULES_PATH = os.path.join(DOCS_PATH, 'modules')
-if os.path.exists("description.rst"):
-    with open("description.rst") as fp:
+if os.path.exists("overview.rst"):
+    with open("overview.rst") as fp:
         OVERVIEW = fp.read()
 else:
     OVERVIEW = PACKAGE.__about__.DESCRIPTION_RST
