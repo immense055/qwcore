@@ -16,6 +16,11 @@ PACKAGE = __import__(PROJECT, fromlist=['cli', '__about__'])
 PACKAGE_PATH = os.path.join(PROJECT_ROOT, PROJECT)
 DOCS_PATH = os.path.join(PROJECT_ROOT, 'docs')
 MODULES_PATH = os.path.join(DOCS_PATH, 'modules')
+if os.path.exists("description.rst"):
+    with open("description.rst") as fp:
+        OVERVIEW = fp.read()
+else:
+    OVERVIEW = PACKAGE.__about__.DESCRIPTION_RST
 
 logger = logging.getLogger(PROJECT)
 
@@ -125,9 +130,8 @@ def rst_docs_index():
         return
     rst = []
     rst.extend(['='*50, PROJECT, '='*50, ''])
-    rst.extend(['.. note::', '', '   a work in progress...', ''])
-    rst.extend([PACKAGE.__about__.DESCRIPTION_RST, ''])
-    rst.extend(['.. toctree::', '  :maxdepth: 2', '', '  overview', '  guide', '  reference'])
+    rst.extend([OVERVIEW, ''])
+    rst.extend(['.. toctree::', '  :maxdepth: 2', '', '  guide', '  reference'])
     with open(os.path.join(DOCS_PATH, 'index.rst'), 'w') as fh:
         fh.write("\n".join(rst))
 
@@ -135,13 +139,7 @@ def rst_docs_index():
 @task
 def rst_readme():
     rst = []
-    org = PACKAGE.__about__.ORG
-    name = PACKAGE.__about__.NAME
-    rst.extend([('.. image:: https://secure.travis-ci.org/'
-                 '{org}/{name}.png?branch=master'.format(org=org, name=name)),
-                '   :target: http://travis-ci.org/{org}/{name}'.format(org=org, name=name),
-                ''])
-    rst.extend([PACKAGE.__about__.DESCRIPTION_RST, ''])
+    rst.extend([OVERVIEW, ''])
     if has_docs():
         rst.extend(['Docs:  http://%s.readthedocs.org/en/latest/' % PROJECT])
     with open(os.path.join(PROJECT_ROOT, 'readme.rst'), 'w') as fh:
