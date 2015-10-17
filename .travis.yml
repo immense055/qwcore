@@ -3,6 +3,7 @@ language: python
 env:
   - TOXENV=flake8
   - TOXENV=py3flake8
+  - TOXENV=packaging
   - TOXENV=docs
   - TOXENV=py26
   - TOXENV=py27
