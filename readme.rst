@@ -9,5 +9,7 @@ status
 
 Unreleased.  Under Development.
 
-master: .. image:: https://secure.travis-ci.org/qwcloud/qwcore.png?branch=master
+master: |travis_master|
+
+.. |travis_master| image:: https://secure.travis-ci.org/qwcloud/qwcore.png?branch=master
    :target: http://travis-ci.org/qwcloud/qwcore
