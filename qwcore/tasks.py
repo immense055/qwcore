@@ -124,13 +124,28 @@ def rst_cli():
         fh.write("\n".join(rst))
 
 
+def readme():
+    org = PACKAGE.__about__.ORG
+    name = PACKAGE.__about__.NAME
+    rst = []
+    rst.extend(['='*len(name), name, '='*len(name), ''])
+    rst.extend([OVERVIEW, ''])
+    rst.extend(['status', '-'*6, ''])
+    rst.extend([PACKAGE.__about__.STATUS, ''])
+    rst.extend([('master: .. image:: https://secure.travis-ci.org/'
+                 '{org}/{name}.png?branch=master'.format(org=org, name=name)),
+                '   :target: http://travis-ci.org/{org}/{name}'.format(org=org, name=name),
+                ''])
+    if has_docs():
+        rst.extend(['Docs:  http://%s.readthedocs.org/en/latest/' % PROJECT])
+    return rst
+
+
 @task
 def rst_docs_index():
     if not has_docs():
         return
-    rst = []
-    rst.extend(['='*50, PROJECT, '='*50, ''])
-    rst.extend([OVERVIEW, ''])
+    rst = readme()
     rst.extend(['.. toctree::', '  :maxdepth: 2', '', '  guide', '  reference'])
     with open(os.path.join(DOCS_PATH, 'index.rst'), 'w') as fh:
         fh.write("\n".join(rst))
@@ -138,12 +153,8 @@ def rst_docs_index():
 
 @task
 def rst_readme():
-    rst = []
-    rst.extend([OVERVIEW, ''])
-    if has_docs():
-        rst.extend(['Docs:  http://%s.readthedocs.org/en/latest/' % PROJECT])
     with open(os.path.join(PROJECT_ROOT, 'readme.rst'), 'w') as fh:
-        fh.write("\n".join(rst))
+        fh.write("\n".join(readme()))
 
 
 @task
