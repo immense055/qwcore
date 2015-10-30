@@ -135,7 +135,7 @@ def readme():
     rst.extend(['Status', '-'*6, ''])
     rst.extend([PACKAGE.__about__.STATUS, ''])
     rst.extend([('.. image:: https://secure.travis-ci.org/'
-                 '{org}/{name}.png?branch=master'.format(org=org, name=name)),
+                 '{org}/{name}.png?branch=develop'.format(org=org, name=name)),
                 '   :target: http://travis-ci.org/{org}/{name}'.format(org=org, name=name),
                 ''])
     return rst
