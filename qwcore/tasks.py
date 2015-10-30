@@ -162,7 +162,7 @@ def rst_readme():
 def merge_master():
     run('git checkout master')
     run('git merge --ff-only origin/master')
-    run('git merge --no-ff -m "merge develop to master" origin/develop')
+    run('git merge --ff-only origin/develop')
     run('git push origin master')
     run('git checkout develop')
 
