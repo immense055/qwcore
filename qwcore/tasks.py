@@ -131,13 +131,16 @@ def readme(is_docs=False):
     rst.extend(['='*len(name), name, '='*len(name), ''])
     rst.extend([OVERVIEW, ''])
     if has_docs() and not is_docs:
-        rst.extend(['`Documentation <http://%s.readthedocs.org/en/latest/>`_' % PROJECT, ''])
+        rst.extend(['`Documentation <http://%s.readthedocs.org/en/latest/>`_' % name, ''])
     rst.extend(['Status', '-'*6, ''])
     rst.extend([PACKAGE.__about__.STATUS, ''])
-    rst.extend([('.. image:: https://secure.travis-ci.org/'
-                 '{org}/{name}.png?branch=develop'.format(org=org, name=name)),
-                '   :target: http://travis-ci.org/{org}/{name}'.format(org=org, name=name),
-                ''])
+    if is_docs:
+        rst.extend(['`github.com/{org}/{name} <https://github.com/{org}/{name}>`_'.format(org=org, name=name), ''])
+    else:
+        rst.extend([('.. image:: https://secure.travis-ci.org/'
+                     '{org}/{name}.png?branch=develop'.format(org=org, name=name)),
+                    '   :target: http://travis-ci.org/{org}/{name}'.format(org=org, name=name),
+                    ''])
     return rst
 
 
