@@ -124,13 +124,13 @@ def rst_cli():
         fh.write("\n".join(rst))
 
 
-def readme():
+def readme(is_docs=False):
     org = PACKAGE.__about__.ORG
     name = PACKAGE.__about__.NAME
     rst = []
     rst.extend(['='*len(name), name, '='*len(name), ''])
     rst.extend([OVERVIEW, ''])
-    if has_docs():
+    if has_docs() and not is_docs:
         rst.extend(['`Documentation <http://%s.readthedocs.org/en/latest/>`_' % PROJECT, ''])
     rst.extend(['Status', '-'*6, ''])
     rst.extend([PACKAGE.__about__.STATUS, ''])
@@ -145,7 +145,7 @@ def readme():
 def rst_docs_index():
     if not has_docs():
         return
-    rst = readme()
+    rst = readme(is_docs=True)
     rst.extend(['Contents', '-'*8, ''])
     rst.extend(['.. toctree::', '  :maxdepth: 2', '', '  guide', '  reference'])
     with open(os.path.join(DOCS_PATH, 'index.rst'), 'w') as fh:
