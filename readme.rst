@@ -4,12 +4,10 @@ qwcore
 
 Core utils for `qwcode <https://github.com/qwcode>`_ projects.
 
-status
+Status
 ------
 
 Unreleased.  Under Development.
 
-master: |travis_master|
-
-.. |travis_master| image:: https://secure.travis-ci.org/qwcloud/qwcore.png?branch=master
+.. image:: https://secure.travis-ci.org/qwcloud/qwcore.png?branch=master
    :target: http://travis-ci.org/qwcloud/qwcore

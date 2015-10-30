@@ -130,15 +130,14 @@ def readme():
     rst = []
     rst.extend(['='*len(name), name, '='*len(name), ''])
     rst.extend([OVERVIEW, ''])
-    rst.extend(['status', '-'*6, ''])
+    if has_docs():
+        rst.extend(['`Documentation <http://%s.readthedocs.org/en/latest/>`_' % PROJECT, ''])
+    rst.extend(['Status', '-'*6, ''])
     rst.extend([PACKAGE.__about__.STATUS, ''])
-    rst.extend(['master: |travis_master|', ''])
-    rst.extend([('.. |travis_master| image:: https://secure.travis-ci.org/'
+    rst.extend([('.. image:: https://secure.travis-ci.org/'
                  '{org}/{name}.png?branch=master'.format(org=org, name=name)),
                 '   :target: http://travis-ci.org/{org}/{name}'.format(org=org, name=name),
                 ''])
-    if has_docs():
-        rst.extend(['Docs:  http://%s.readthedocs.org/en/latest/' % PROJECT])
     return rst
 
 
@@ -147,6 +146,7 @@ def rst_docs_index():
     if not has_docs():
         return
     rst = readme()
+    rst.extend(['Contents', '-'*8, ''])
     rst.extend(['.. toctree::', '  :maxdepth: 2', '', '  guide', '  reference'])
     with open(os.path.join(DOCS_PATH, 'index.rst'), 'w') as fh:
         fh.write("\n".join(rst))
