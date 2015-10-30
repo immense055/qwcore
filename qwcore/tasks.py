@@ -25,7 +25,7 @@ else:
 logger = logging.getLogger(PROJECT)
 
 
-__all__ = ['docs', 'install_editable', 'rst_all', 'rst_api', 'rst_cli',
+__all__ = ['docs', 'install_editable', 'merge_master', 'rst_all', 'rst_api', 'rst_cli',
            'rst_docs_index', 'rst_readme', 'test']
 
 
@@ -156,6 +156,15 @@ def rst_docs_index():
 def rst_readme():
     with open(os.path.join(PROJECT_ROOT, 'readme.rst'), 'w') as fh:
         fh.write("\n".join(readme()))
+
+
+@task
+def merge_master():
+    run('git checkout master')
+    run('git merge --ff-only origin/master')
+    run('git merge --no-ff -m "merge develop to master" origin/develop')
+    run('git push origin master')
+    run('git checkout develop')
 
 
 @task
