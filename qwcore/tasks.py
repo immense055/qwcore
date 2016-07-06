@@ -5,8 +5,7 @@ import os
 import shutil
 
 from invoke import run as irun
-from invoke import task as itask
-from invoke import Task
+from invoke import task
 
 from qwcore import echo
 
@@ -38,33 +37,6 @@ def run(*args, **kwargs):
     return r
 
 
-def task(*args, **kwargs):
-    """
-    decorator that adds logging to invoke's task decorator
-    """
-    if len(args) == 1 and callable(args[0]) and not isinstance(args[0], Task):
-        withargs = False
-    else:
-        withargs = True
-
-    def wrapper_maker(mytask):
-        def wrapper():
-            echo.success("Begin: %s" % mytask.__name__)
-            mytask()
-            echo.success("Completed: %s" % mytask.__name__)
-        wrapper.__name__ = mytask.__name__
-        return wrapper
-    if withargs:
-        def decorator(mytask):
-            wrapper = wrapper_maker(mytask)
-            return itask(*args, **kwargs)(wrapper)
-        return decorator
-    else:
-        mytask = args[0]
-        wrapper = wrapper_maker(mytask)
-        return itask(wrapper)
-
-
 def has_docs():
     if not os.path.exists(DOCS_PATH):
         echo.warning("No docs found")
@@ -73,14 +45,14 @@ def has_docs():
 
 
 @task
-def install_editable():
+def install_editable(c):
     cmd = 'pip install -e .'
     logger.info(cmd)
     run(cmd)
 
 
 @task
-def rst_api():
+def rst_api(c):
     if not has_docs():
         return
     if os.path.isdir(MODULES_PATH):
@@ -90,7 +62,7 @@ def rst_api():
 
 
 @task(pre=[install_editable])
-def rst_cli():
+def rst_cli(c):
     """Build rst for cli docs based on console script entry points"""
     if not has_docs():
         return
@@ -145,7 +117,7 @@ def readme(is_docs=False):
 
 
 @task
-def rst_docs_index():
+def rst_docs_index(c):
     if not has_docs():
         return
     rst = readme(is_docs=True)
@@ -156,13 +128,13 @@ def rst_docs_index():
 
 
 @task
-def rst_readme():
+def rst_readme(c):
     with open(os.path.join(PROJECT_ROOT, 'readme.rst'), 'w') as fh:
         fh.write("\n".join(readme()))
 
 
 @task
-def merge_master():
+def merge_master(c):
     run('git checkout master')
     run('git merge --ff-only origin/master')
     run('git merge --ff-only origin/develop')
@@ -171,22 +143,22 @@ def merge_master():
 
 
 @task
-def rst_all():
-    rst_api()
-    rst_cli()
-    rst_docs_index()
-    rst_readme()
+def rst_all(c):
+    rst_api(c)
+    rst_cli(c)
+    rst_docs_index(c)
+    rst_readme(c)
 
 
 @task(pre=[install_editable, rst_all])
-def docs():
+def docs(c):
     if not has_docs():
         return
     run('sphinx-build -W -b html -d docs/_build/doctree docs docs/_build/html')
 
 
 @task(default=True)
-def test():
+def test(c):
     cmd = 'tox -e py27,flake8,py3flake8'
     logger.info(cmd)
     run(cmd)
